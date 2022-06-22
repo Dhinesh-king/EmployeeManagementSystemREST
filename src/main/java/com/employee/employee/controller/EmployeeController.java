@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.employee.employee.dto.EmployeeDto;
 import com.employee.employee.entity.Employee;
+import com.employee.employee.exception.EmployeeMgmtException;
 import com.employee.employee.service.EmployeeService;
 
 
@@ -28,7 +30,7 @@ public class EmployeeController {
 	private EmployeeService empService;
 	
 	@GetMapping("/all")
-	public ResponseEntity<List<Employee>> getEmployees() {
+	public ResponseEntity<List<Employee>> getEmployees() throws EmployeeMgmtException {
 		
 		List<Employee> empList = empService.getAllEmployees();
 		
@@ -36,16 +38,16 @@ public class EmployeeController {
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Employee> addEmp(@RequestBody Employee employee) {
+	public ResponseEntity<Employee> addEmp(@RequestBody EmployeeDto employeeDto) {
 		
-		Employee savedEmployee = empService.saveEmployee(employee);
+		Employee savedEmployee = empService.saveEmployee(employeeDto);
 		
 		return new ResponseEntity<>(savedEmployee , HttpStatus.CREATED);
 	}
 	
 	
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteEmp(@PathVariable("id") Integer id, Model model) {
+	public ResponseEntity<String> deleteEmp(@PathVariable("id") Integer id, Model model) throws EmployeeMgmtException {
 		
 		String message = empService.deleteEmployeeById(id);
 		
@@ -53,9 +55,9 @@ public class EmployeeController {
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<Employee> updateEmp(@RequestBody Employee employee) {
+	public ResponseEntity<Employee> updateEmp(@RequestBody EmployeeDto employeeDto) {
 		
-		Employee saveEmployee = empService.saveEmployee(employee);
+		Employee saveEmployee = empService.saveEmployee(employeeDto);
 		
 		return new ResponseEntity<>(saveEmployee , HttpStatus.ACCEPTED);
 		
